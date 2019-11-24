@@ -5,6 +5,10 @@ Sub VBA_Stocks()
    ' Keep track of the location for each Ticker in the summary table
     Dim Summary_Table_Row As Long
     Summary_Table_Row = 2
+    
+    'Set an initial variable for holding the Total Volume Per Ticker
+    Dim Total_Volume As Long
+    Total_Volume = 0
    
    'Set Script Variables
     Dim i As Long
@@ -30,9 +34,6 @@ Sub VBA_Stocks()
         ws.Range("I:Q").Columns.AutoFit
     
     'Build Summary Table
-        'Set an initial variable for holding the Total Volume Per Ticker
-        Dim Total_Volume As Long
-        Total_Volume = 0
         
         'Loop Through All Tickers
         If ws.Cells(i - 1, 1).Value <> ws.Cells(i, 1).Value Then
@@ -98,7 +99,12 @@ Sub VBA_Stocks()
     'Find Greatest % Decrease - COMPLETE
         Dim Min_Percent As Double
         Min_Percent = Application.WorksheetFunction.Min(ws.Range("K:K").Value)
+        
+        If Min_Percent < 0 Then
         ws.Cells(3, 17).Value = Min_Percent
+        Else: ws.Cells(3, 17).Value = "No % Decrease"
+        End If
+        
         
     'Find Greatest Total Volume - COMPLETE
         Dim Max_Volume As Long
@@ -123,3 +129,6 @@ Next i
 Next ws
 
 End Sub
+
+
+
