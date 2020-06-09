@@ -1,0 +1,134 @@
+Sub VBA_Stocks()
+'Loop through all worksheets
+    For Each ws In Worksheets
+    
+   ' Keep track of the location for each Ticker in the summary table
+    Dim Summary_Table_Row As Long
+    Summary_Table_Row = 2
+    
+    'Set an initial variable for holding the Total Volume Per Ticker
+    Dim Total_Volume As Long
+    Total_Volume = 0
+   
+   'Set Script Variables
+    Dim i As Long
+        For i = 2 To ws.Cells(Rows.Count, "a").End(xlUp).Row
+        
+    Dim Ticker As String
+    Dim Open_Price As Double
+    Dim Close_Price As Double
+    
+    'Add Cells - COMPLETE
+        ws.Cells(1, 9).Value = "Ticker"
+        ws.Cells(1, 10).Value = "Yearly Change"
+        ws.Cells(1, 11).Value = "Percentage Change"
+        ws.Cells(1, 12).Value = "Total Stock Volume"
+        
+        ws.Cells(2, 15).Value = "Greatest % Increase"
+        ws.Cells(3, 15).Value = "Greatest % Decrease"
+        ws.Cells(4, 15).Value = "Greatest Total Volume"
+        ws.Cells(1, 16).Value = "Ticker"
+        ws.Cells(1, 17).Value = "Value"
+        
+    'AutoFit inserted columns - COMPLETE
+        ws.Range("I:Q").Columns.AutoFit
+    
+    'Build Summary Table
+        
+        'Loop Through All Tickers
+        If ws.Cells(i - 1, 1).Value <> ws.Cells(i, 1).Value Then
+            'Identify Open Price
+            Open_Price = ws.Cells(i, 3).Value
+                   
+                ElseIf ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
+                    'Identify Close Price
+                    Close_Price = ws.Cells(i, 6).Value
+                       
+                    'Set Ticker Symbol Name
+                    Ticker = ws.Cells(i, 1).Value
+                            
+                    'Print Ticker in Summary Table
+                    ws.Range("I" & Summary_Table_Row).Value = Ticker
+                                            
+                    'Calculate Yearly Change
+                    Dim Yearly_Change As Double
+                    Yearly_Change = Close_Price - Open_Price
+                    
+                    'Calculate Percentage Change
+                    Dim Pcnt_Change As Double
+                    Pcnt_Change = (Close_Price - Open_Price) / Open_Price
+                    
+                    'Calculate Total Volume
+                    Total_Volume = Total_Volume + ws.Cells(i, 7).Value
+                                               
+                    'Print Yearly Change in Summary Table
+                    ws.Range("J" & Summary_Table_Row).Value = Yearly_Change
+                    
+                    'Print Percentage Change in Summary Table
+                    ws.Range("K" & Summary_Table_Row).Value = Pcnt_Change
+
+                    'Print Total Volume in Summary Table
+                    ws.Range("L" & Summary_Table_Row).Value = Total_Volume
+                        
+                    'Add 1 to Summary Table Row
+                    Summary_Table_Row = Summary_Table_Row + 1
+                        
+                    'Reset Total Volume
+                    Total_Volume = 0
+       
+                Else
+                Total_Volume = Total_Volume + ws.Cells(i, 7).Value
+                    
+                End If
+            
+    'Highlight positive change in green and negative change in red - COMPLETE
+            
+            If ws.Cells(i, 11).Value < 0 Then
+                ws.Cells(i, 11).Interior.ColorIndex = 3
+            
+            ElseIf ws.Cells(i, 11).Value > 0 Then
+                ws.Cells(i, 11).Interior.ColorIndex = 4
+        End If
+
+'Build Bonus Table
+     'Find Greatest % Increase - COMPLETE
+        Dim Max_Percent As Double
+        Max_Percent = WorksheetFunction.Max(ws.Range("K:K").Value)
+        ws.Cells(2, 17).Value = Max_Percent
+        
+    'Find Greatest % Decrease - COMPLETE
+        Dim Min_Percent As Double
+        Min_Percent = Application.WorksheetFunction.Min(ws.Range("K:K").Value)
+        
+        If Min_Percent < 0 Then
+        ws.Cells(3, 17).Value = Min_Percent
+        Else: ws.Cells(3, 17).Value = "No % Decrease"
+        End If
+        
+        
+    'Find Greatest Total Volume - COMPLETE
+        Dim Max_Volume As Long
+        Max_Volume = WorksheetFunction.Max(ws.Range("L:L").Value)
+        ws.Cells(4, 17).Value = Max_Volume
+        
+    'Place Values in Bonus table- COMPLETE
+        If ws.Cells(i, 11).Value = Max_Percent Then
+            ws.Cells(2, 16).Value = ws.Cells(i, 9).Value
+        End If
+        
+        If ws.Cells(i, 11).Value = Min_Percent Then
+            ws.Cells(3, 16).Value = ws.Cells(i, 9).Value
+        End If
+        
+        If ws.Cells(i, 12).Value = Max_Volume Then
+            ws.Cells(4, 16).Value = ws.Cells(i, 9).Value
+        End If
+
+Next i
+
+Next ws
+
+End Sub
+
+
+
