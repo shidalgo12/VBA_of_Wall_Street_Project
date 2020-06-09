@@ -16,7 +16,12 @@ VBA scripts written to summarize the annual change in stocks and highlight stock
 
 2. Additional scripts developed to return the stock with the "Greatest %Iincrease", "Greatest % Decrease" and "Greatest Total Volume". 
 
-![](VBA_result.png)
+![](Images/VBA_result.png)
+
+![](Images/VBA_script1.png)
+![](Images/VBA_script2.png)
+![](Images/VBA_script3.png)
+![](Images/VBA_script4.png)
 
 
 
